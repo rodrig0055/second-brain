@@ -12,18 +12,23 @@ Stack: Next.js 16 (App Router, React 19) · Auth.js v5 (Google) · Neon Postgres
 Drizzle · Vercel AI SDK v6 with direct Anthropic, OpenAI and Google providers ·
 Astryx design system + Tailwind v4 · S3-compatible storage (R2) or Vercel Blob.
 
+![A chat for the Social Media team, grounded in Acme Florals' brand voice and offer rules: copy-ready caption cards](docs/chat.png)
+
 ## What it does
 
 **Brand-grounded agents.** `src/lib/prompt.ts` assembles one system prompt per
 brand and team in a fixed, cache-friendly order: global master prompt, brand-wide
 docs (voice, offer rules, catalog), team playbooks, then up to five recent proven
 winners. Chat and task runs share it, so a task and a follow-up chat say the same
-thing.
+thing. Above, the caption's free-delivery threshold and free greeting card come
+from the brand's offer rules and catalog docs, not from the question.
 
 **Task templates.** Admins define forms (`inputFields`) and a `{{variable}}`
 prompt per team. Runs stream, are saved, can be reviewed by a second model and
 continued in chat. Output can render as prose, a structured report, or an ad
 brief that writes drafts straight into the ads queue.
+
+![A task run: the Ad angle brainstorm template filled in for one product, with ranked angles and a top pick](docs/task-run.png)
 
 **Live data tools.** Per-brand encrypted connections (AES-256-GCM) to Meta Ads,
 Meta organic (Page + Instagram), Google Ads, GA4, Search Console via BigQuery,
@@ -44,6 +49,10 @@ tabs, platform scope, prompt focus and capabilities. Built-in workspaces:
 | Partnerships | Partner outreach tracker with a follow-up ladder and AI-drafted emails |
 | Google Ads, Commercial | Dashboards, Merchant Center title proposals, CMS tools over MCP |
 
+![Home: every workspace the user can open, and recent chats and task runs](docs/home.png)
+
+![The Meta Ads workspace's task library](docs/tasks.png)
+
 **Image studio.** GPT Image, Gemini and others behind one interface, reusable
 brand assets as references, saved prompt templates in folders, GIF and SVG
 output.
@@ -53,6 +62,8 @@ scheduled jobs reflect on recent runs, propose new docs or edits for an admin to
 approve, and lint for contradictions (`src/lib/wiki`, `src/lib/loops`,
 `src/lib/proposals`). No RAG: the knowledge that matters fits in the prompt and
 is cached.
+
+![Admin, Knowledge: global playbooks and the master prompt, then each brand's voice, offer rules and catalog notes](docs/knowledge.png)
 
 **Access control.** Google sign-in against an allowlist (the `users` table).
 `src/lib/access.ts` is the single authorisation layer: `requireUser`,
