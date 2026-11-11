@@ -1,0 +1,55 @@
+name: PR checks
+
+# Lint, types, unit tests and a production build, from a clean `npm ci`.
+#
+# No secrets. The build and tests need DATABASE_URL and AUTH_SECRET only to import their modules
+# (neon() parses the URL at import and never connects), so placeholders are enough.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# A new push to the same PR supersedes the run in progress.
+concurrency:
+  group: pr-checks-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      AUTH_SECRET: ci-placeholder-not-a-secret
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Python tests (Meta insights bridge)
+        run: python3 -m unittest tests/test_meta_insights.py
+
+      - name: Build
+        run: npm run build
