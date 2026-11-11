@@ -1,0 +1,8 @@
+/*
+ * StyleX output for app code (Astryx page templates, stylex.create in src/). The postcss plugin
+ * replaces the directive below at build time. It sits in the `components` layer declared in
+ * ./layers.css: above Astryx's own styles, below Tailwind utilities, like the rest of app CSS.
+ */
+@layer components {
+  @stylex;
+}

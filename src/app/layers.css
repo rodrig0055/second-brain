@@ -1,0 +1,10 @@
+/*
+ * Cascade-layer order for Tailwind v4 + Astryx. `npx astryx docs styling-libraries/tailwind`
+ *
+ * A layer's rank is fixed by the first stylesheet that names it, and Next.js hoists @import
+ * content above inline CSS, so this line lives in its own file imported FIRST in
+ * src/app/layout.tsx (before globals.css and before anything that imports Astryx or theme CSS).
+ *
+ * reset < Tailwind theme < Tailwind preflight < Astryx base < Astryx theme < app components < utilities
+ */
+@layer reset, theme, base, astryx-base, astryx-theme, components, utilities;

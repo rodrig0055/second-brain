@@ -1,0 +1,27 @@
+# Vercel uploads every file not listed here, and this file REPLACES the
+# .gitignore fallback, so it has to name everything that should not ship.
+# Without it the CLI uploaded 167 MB (almost all of it output/), which is
+# slow enough that a single network blip kills the deploy.
+
+# installed and built locally, rebuilt on Vercel
+node_modules
+.next
+.git
+.vercel
+*.tsbuildinfo
+
+# never ship local env into a remote build: Next.js loads .env.local over
+# the project's own environment variables
+.env
+.env.local
+.env.*.local
+
+# local generated artifacts (167 MB of images, not app code)
+output
+
+# assistant / editor local state
+.claude
+.agents
+.memory
+.firecrawl
+.DS_Store

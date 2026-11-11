@@ -1,0 +1,277 @@
+/*
+ * Global styles: Tailwind v4 + Astryx (`npx astryx docs styling-libraries/tailwind`).
+ *
+ * The layer order is declared in ./layers.css, which layout.tsx imports first. Every rule in this
+ * file sits in a deliberate layer (`npx astryx docs migration/migration-setup layer-audit`):
+ *   reset       app element defaults; below Astryx so components keep their own styles
+ *   components  app classes (.u-transition, .skeleton); above Astryx, below utilities
+ *   utilities   patches to Tailwind utilities, so they keep beating everything else
+ * Do not add unlayered rules: unlayered CSS beats every layer and silently breaks components.
+ *
+ * Theme tokens (fonts, radii, text sizes, spacing, easing, accent) come from the Astryx theme
+ * through the Tailwind bridge. Do not redefine Astryx token names here; app-only tokens use
+ * their own names (--app-duration-*, --ease-smooth, --surface, --canvas).
+ */
+@layer reset, theme, base, astryx-base, astryx-theme, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "@astryxdesign/core/reset.css";
+@import "@astryxdesign/core/astryx.css";
+@import "../themes/brain/brain.css"; /* built from src/themes/brain/brainTheme.ts */
+@import "@astryxdesign/core/tailwind-theme.css";
+@import "tailwindcss/utilities.css" layer(utilities);
+
+
+@source "../../node_modules/streamdown/dist/index.js";
+
+/*
+ * Second Brain: focused workbench
+ *
+ * A restrained light interface for long, concentrated work sessions. Tinted
+ * neutrals carry hierarchy; strong color is reserved for status and errors.
+ */
+@theme inline {
+
+  --color-zinc-50: oklch(0.985 0.003 285);
+  --color-zinc-100: oklch(0.967 0.004 285);
+  --color-zinc-200: oklch(0.92 0.006 285);
+  --color-zinc-300: oklch(0.87 0.008 285);
+  --color-zinc-400: oklch(0.705 0.012 285);
+  --color-zinc-500: oklch(0.55 0.014 285);
+  --color-zinc-600: oklch(0.445 0.014 285);
+  --color-zinc-700: oklch(0.37 0.012 285);
+  --color-zinc-800: oklch(0.275 0.01 285);
+  --color-zinc-900: oklch(0.205 0.008 285);
+  --color-zinc-950: oklch(0.14 0.007 285);
+
+  /* Preserve legacy Tailwind foreground names without introducing pure white/black. */
+  --color-white: var(--color-zinc-50);
+  --color-black: var(--color-zinc-950);
+
+  --color-red-50: oklch(0.97 0.015 25);
+  --color-red-100: oklch(0.94 0.035 25);
+  --color-red-200: oklch(0.88 0.075 25);
+  --color-red-300: oklch(0.78 0.13 25);
+  --color-red-400: oklch(0.66 0.19 25);
+  --color-red-500: oklch(0.58 0.22 25);
+  --color-red-600: oklch(0.5 0.2 25);
+  --color-red-700: oklch(0.43 0.17 25);
+  --color-emerald-50: oklch(0.97 0.02 160);
+  --color-emerald-200: oklch(0.88 0.07 160);
+  --color-emerald-500: oklch(0.64 0.17 160);
+  --color-emerald-600: oklch(0.53 0.15 160);
+  --color-emerald-700: oklch(0.44 0.12 160);
+  --color-amber-50: oklch(0.975 0.025 80);
+  --color-amber-200: oklch(0.89 0.09 80);
+  --color-amber-500: oklch(0.7 0.16 80);
+  --color-amber-600: oklch(0.58 0.15 80);
+  --color-amber-700: oklch(0.48 0.13 80);
+  --color-amber-800: oklch(0.4 0.1 80);
+  --color-blue-50: oklch(0.97 0.018 250);
+  --color-blue-600: oklch(0.5 0.17 250);
+  --color-green-50: oklch(0.97 0.02 145);
+  --color-green-600: oklch(0.5 0.14 145);
+  --color-orange-50: oklch(0.97 0.025 55);
+  --color-orange-600: oklch(0.55 0.16 55);
+
+
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+
+  --shadow-card: 0 1px 2px oklch(0.14 0.007 285 / 0.05);
+  --shadow-elevated:
+    0 16px 40px oklch(0.14 0.007 285 / 0.12),
+    0 2px 8px oklch(0.14 0.007 285 / 0.06);
+
+  --animate-enter: enter var(--app-duration-slow) var(--ease-standard) both;
+  --animate-shimmer: working-pulse 1.4s var(--ease-in-out) infinite alternate;
+}
+
+:root {
+  color-scheme: light;
+  --app-duration-normal: 180ms;
+  --app-duration-slow: 240ms;
+  --canvas: oklch(0.982 0.003 285);
+  --surface: oklch(0.998 0.001 285);
+  --surface-raised: oklch(0.995 0.002 285);
+  --surface-hover: oklch(0.965 0.004 285);
+}
+
+@layer reset {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    background: var(--canvas);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    margin: 0;
+    background: var(--canvas);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    accent-color: var(--color-zinc-900);
+  }
+
+  button,
+  a,
+  summary,
+  select,
+  input[type="checkbox"],
+  input[type="radio"] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background: oklch(0.75 0.09 250 / 0.28);
+  }
+
+  :where(a, button, input, select, textarea, summary):focus-visible {
+    outline: 2px solid oklch(0.55 0.12 250);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 767px) {
+    html {
+      scroll-padding-top: 68px;
+    }
+
+    input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+    select,
+    textarea {
+      min-height: 2.75rem;
+    }
+  }
+
+  /* Native modal dialogs: keep wheel and touch scrolling over the dialog or its backdrop from
+     scrolling the page underneath. `overflow: hidden` makes ::backdrop a scroll container, which
+     overscroll-behavior needs before it applies. Progressive: browsers that ignore it on
+     non-scrolling containers still get showModal's inert page and focus trap. */
+  dialog:modal {
+    overscroll-behavior: contain;
+  }
+  dialog::backdrop {
+    overflow: hidden;
+    overscroll-behavior: contain;
+  }
+}
+
+/* In the base layer so a utility on the element (text-xs, font-medium) wins.
+   Unlayered, this beat every Tailwind utility and controls silently took their
+   parent's size instead of the one written on them. */
+@layer base {
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+}
+
+@layer components {
+  .glass-menu {
+    background-color: oklch(0.998 0.001 285 / 0.98);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .recharts-default-tooltip {
+    border: 1px solid var(--color-zinc-200) !important;
+    border-radius: var(--radius-element) !important;
+    background: var(--surface-raised) !important;
+    box-shadow: var(--shadow-elevated) !important;
+  }
+
+  .recharts-tooltip-label,
+  .recharts-tooltip-item {
+    color: var(--color-zinc-800) !important;
+  }
+
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes working-pulse {
+    from {
+      opacity: 0.48;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .u-transition {
+    transition:
+      background-color var(--app-duration-normal) var(--ease-smooth),
+      border-color var(--app-duration-normal) var(--ease-smooth),
+      color var(--app-duration-normal) var(--ease-smooth),
+      opacity var(--app-duration-normal) var(--ease-smooth),
+      box-shadow var(--app-duration-normal) var(--ease-smooth),
+      transform var(--app-duration-normal) var(--ease-smooth);
+  }
+
+  .u-shimmer {
+    color: var(--color-zinc-600);
+    animation: var(--animate-shimmer);
+  }
+
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Placeholder blocks shaped like the content they stand in for. */
+  .skeleton {
+    border-radius: var(--radius-inner);
+    background: var(--color-zinc-100);
+    animation: working-pulse 1.4s var(--ease-in-out) infinite alternate;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton { animation: none !important; }
+  }
+}
+
+@layer utilities {
+  /* The established bg-white role is a crisp content surface, not glass. */
+  .bg-white {
+    background-color: var(--surface);
+  }
+
+  .hover\:bg-white:hover {
+    background-color: var(--surface-hover);
+  }
+
+  /* Keep primary labels legible during HMR and across older cached markup. */
+  .text-white {
+    color: var(--color-zinc-50);
+  }
+
+  /* Dark action surfaces own their foreground color; labels must never inherit ink. */
+  .bg-zinc-900 {
+    color: var(--color-zinc-50);
+  }
+}

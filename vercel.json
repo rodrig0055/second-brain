@@ -1,0 +1,60 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "fluid": true,
+  "regions": [
+    "iad1"
+  ],
+  "functions": {
+    "api/meta-insights.py": {
+      "maxDuration": 30,
+      "memory": 1024,
+      "excludeFiles": "{node_modules/**,.next/**,src/**,public/**,scripts/**,tests/**}"
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/sync",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/tasks",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/ads",
+      "schedule": "0 23 * * *"
+    },
+    {
+      "path": "/api/cron/loops",
+      "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/storefront",
+      "schedule": "0 2 * * 1"
+    },
+    {
+      "path": "/api/cron/wiki",
+      "schedule": "0 2 * * 2"
+    },
+    {
+      "path": "/api/cron/ads-creatives",
+      "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/cron/ai-search",
+      "schedule": "5 0 * * *"
+    },
+    {
+      "path": "/api/cron/ai-search",
+      "schedule": "5 1 * * *"
+    },
+    {
+      "path": "/api/cron/ai-search",
+      "schedule": "5 2 * * *"
+    },
+    {
+      "path": "/api/cron/ai-search",
+      "schedule": "5 3 * * *"
+    }
+  ]
+}
